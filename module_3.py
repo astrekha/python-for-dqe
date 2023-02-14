@@ -59,9 +59,8 @@ source_text_normalized = source_text_normalized.replace(' iz ', ' is ')
 print(f'Normalized text with inserted sentence and fixed “iz” with correct “is” is:\n{source_text_normalized}\n')
 
 
-# calculate number of whitespace characters in this text
 count_whitespaces = 0   # set counter = 0
-for i in source_text_normalized:   # count all spaces, '\n' and '\t' characters
-    if i == ' ' or i == '\n' or i == '\t':
+for i in source_text_normalized:
+    if i in re.findall('\s', source_text_normalized):
         count_whitespaces += 1
 print(f'\nNumber of whitespace characters in normalized text is: {count_whitespaces}')
