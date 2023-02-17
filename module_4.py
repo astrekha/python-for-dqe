@@ -1,22 +1,63 @@
 import re
-
-source_text = '''homEwork:
-
-  tHis iz your homeWork, copy these Text to variable.
-
+import random
+import string
+from random import randint
 
 
-  You NEED TO normalize it fROM letter CASEs point oF View. also, create one MORE senTENCE witH LAST WoRDS of each existING SENtence and add it to the END OF this Paragraph.
+# part for module 2
+# function for creation list of dictionaries with number of elements from 2 till num
+def create_dict_list(num):
+    dict_count = random.randint(2, num)  # create random number for dictionaries count in list from 2 to 10
+    n = 2  # set min number for dictionaries count in list
+    dict_list_out = []  # declare empty list for dictionaries list
+    while n <= dict_count + 1:
+        # add to dict_list list where element is random number fro 0 to 100, key is random lowercase letter,
+        # k = max number of items in each dictionary
+        dict_list_out.append({ele: randint(0, 101) for ele in random.choices(string.ascii_lowercase, k=randint(1, 5))})
+        n += 1
+    return dict_list_out
 
 
+# function for creation combined dictionary with modified keys and max value
+def get_combined_dict(dict_list_in):
+    keys_list = []  # declare empty list for all keys of all dictionaries
+    for element in dict_list_in:  # for each element in  dict_list
+        for key in element.keys():  # for each key of dictionary in dict_list
+            keys_list.append(key)  # add this key to keys_list
+    # print(keys_list)
 
-  it iZ misspeLLing here. fix“iZ” with correct “is”, but ONLY when it Iz a mistAKE.
+    # create empty dictionary which will store list of values from different dictionaries for common keys
+    combined_dict = {}
+    for key in keys_list:  # for each key in keys_list
+        combined_dict[key] = []  # declare empty list for each key in keys_list
+        for element in dict_list_in:  # for each list in dict_list
+            if key in element.keys():  # if key from keys_list in key of source dictionary
+                combined_dict[key].append(element[key])  # add this key and value of the key to combined_dict
+            else:
+                # add this key and -1 value as indicator to be able find number of dict to combined_dict
+                combined_dict[key].append(-1)
+
+    final_dict_out = {}  # declare final dictionary
+    i = 0
+    for key in combined_dict.keys():  # for ach key in combined_dict
+        # create short_values_list and remove all values = -1
+        short_values_list = [value for value in combined_dict[key] if value != -1]
+        # if len of short_values_list = 1 it means that only one value exists for this key and key should not be renamed
+        if len(short_values_list) == 1:
+            # add key and value to final dictionary
+            final_dict_out[key] = short_values_list[0]
+        else:
+            # if len of short_values_list != 1 it means that several values exist for this key and key should be renamed
+            # and max value should be found
+            # find number of dictionary with max value from source dict_list to add to key with _
+            key2 = key + '_' + str(combined_dict[key].index(max(combined_dict[key])) + 1)
+            # add max value for renamed key to final dictionary
+            final_dict_out[key2] = max(combined_dict[key])
+            i = i + 1
+    return final_dict_out
 
 
-
-  last iz TO calculate nuMber OF Whitespace characteRS in this Tex. caREFULL, not only Spaces, but ALL whitespaces. I got 87.'''
-
-
+# part for module 3
 # creation of a function which return sentence which consists of last word from each sentence in input text
 def get_sentence_of_last_words(input_text):
     last_word_sentence_list = []
@@ -73,6 +114,34 @@ def count_whitespaces(input_text):
             count_whitespaces += 1
     return count_whitespaces
 
+
+# module 2 implementation
+dict_list = create_dict_list(10)
+print(f'Source list of dictionaries is:')
+print(dict_list)
+
+final_dict = get_combined_dict(dict_list)
+print(f'Final dictionary is:')
+print(final_dict)
+
+print('\n\n')
+
+# module 3 implementation
+source_text = '''homEwork:
+
+  tHis iz your homeWork, copy these Text to variable.
+
+
+
+  You NEED TO normalize it fROM letter CASEs point oF View. also, create one MORE senTENCE witH LAST WoRDS of each existING SENtence and add it to the END OF this Paragraph.
+
+
+
+  it iZ misspeLLing here. fix“iZ” with correct “is”, but ONLY when it Iz a mistAKE.
+
+
+
+  last iz TO calculate nuMber OF Whitespace characteRS in this Tex. caREFULL, not only Spaces, but ALL whitespaces. I got 87.'''
 
 last_word_sentence = get_sentence_of_last_words(source_text)
 print(f'Sentence with last words of each existing sentence is:\n{last_word_sentence}\n\n')
