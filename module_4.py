@@ -5,8 +5,12 @@ from random import randint
 
 
 # part for module 2
-# function for creation list of dictionaries with number of elements from 2 till num
 def create_dict_list(num):
+    """
+    function for creation list of dictionaries with number of elements from 2 till num
+    :param num: int
+    :return: list of dictionaries
+    """
     dict_count = random.randint(2, num)  # create random number for dictionaries count in list from 2 to 10
     n = 2  # set min number for dictionaries count in list
     dict_list_out = []  # declare empty list for dictionaries list
@@ -18,8 +22,14 @@ def create_dict_list(num):
     return dict_list_out
 
 
-# function for creation combined dictionary with modified keys and max value
 def get_combined_dict(dict_list_in):
+    """
+    function for creation combined dictionary with following condition:
+             if dicts have same key, we will take max value, and rename key with dict number with max value,
+             if key is only in one dict - take it as is
+    :param dict_list_in: list of dictionaries
+    :return: dictionary
+    """
     keys_list = []  # declare empty list for all keys of all dictionaries
     for element in dict_list_in:  # for each element in  dict_list
         for key in element.keys():  # for each key of dictionary in dict_list
@@ -58,8 +68,12 @@ def get_combined_dict(dict_list_in):
 
 
 # part for module 3
-# creation of a function which return sentence which consists of last word from each sentence in input text
 def get_sentence_of_last_words(input_text):
+    """
+    function which return sentence which consists of last word from each sentence in input text
+    :param input_text: string
+    :return: string
+    """
     last_word_sentence_list = []
     for sentence in re.split(r'[.!?]', re.sub(' +', ' ', (input_text.lower().replace('\n', '')))):
         if len(sentence) != 0:
@@ -69,8 +83,12 @@ def get_sentence_of_last_words(input_text):
     return output_sentence
 
 
-# creation of a function which normalizes input text from case point of view
 def normalize_case(input_text):
+    """
+    function which normalizes input text from case point of view
+    :param input_text: string
+    :return: string
+    """
     input_text_normalized = []
     for paragraph in input_text.lower().splitlines():
         if paragraph.endswith("."):
@@ -85,9 +103,14 @@ def normalize_case(input_text):
     return input_text_normalized
 
 
-# creation of a function which inserts sentence consists of last words of each sentence in input text
-# into n-th(starts from 0) non-empty paragraph in input text
 def insert_sentence(input_text, n):
+    """
+    function which inserts sentence consists of last words of each sentence in input text
+    into n-th(starts from 0) non-empty paragraph in input text
+    :param input_text: string
+    :param n: int
+    :return: string
+    """
     output_text = []
     i = 0
     paragraph_count = 0
@@ -106,8 +129,12 @@ def insert_sentence(input_text, n):
     return output_text
 
 
-# creation of a function which counts all whitespaces it input text
 def count_whitespaces(input_text):
+    """
+    function which counts all whitespaces it input text
+    :param input_text: string
+    :return: int
+    """
     count_whitespaces = 0
     for i in input_text:
         if i in re.findall('\s', input_text):
