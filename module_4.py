@@ -89,18 +89,21 @@ def normalize_case(input_text):
     :param input_text: string
     :return: string
     """
-    input_text_normalized = []
-    for paragraph in input_text.lower().splitlines():
-        if paragraph.endswith("."):
-            paragraph = re.sub('.$', '. ', paragraph)
-        sentence_list_normalized = []
-        for sentence in paragraph.split('. '):
-            sentence = sentence.strip().capitalize()
-            sentence_list_normalized.append(sentence)
-        paragraph = '. '.join(sentence_list_normalized).strip()
-        input_text_normalized.append(paragraph)
-    input_text_normalized = '\n'.join(input_text_normalized)
-    return input_text_normalized
+    try:
+        input_text_normalized = []
+        for paragraph in input_text.lower().splitlines():
+            if paragraph.endswith("."):
+                paragraph = re.sub('.$', '. ', paragraph)
+            sentence_list_normalized = []
+            for sentence in paragraph.split('. '):
+                sentence = sentence.strip().capitalize()
+                sentence_list_normalized.append(sentence)
+            paragraph = '. '.join(sentence_list_normalized).strip()
+            input_text_normalized.append(paragraph)
+        input_text_normalized = '\n'.join(input_text_normalized)
+        return input_text_normalized
+    except AttributeError:
+        print(f'Input string {input_text} is incorrect. normalize_case function cannot be applied.')
 
 
 def insert_sentence(input_text, n):
