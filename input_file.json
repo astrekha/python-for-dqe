@@ -1,0 +1,41 @@
+[
+{
+"type": "news",
+"text": "sometHinG HapPenEd. It is so interesting.\nGood news.",
+"city": "GrodnO"
+},
+{
+"type": "Private Ad",
+"text": "i WanT tO seLL a CAR. it Is gReeN.\nIt iS supeR FAsT.",
+"exp_date": "2023-05/28"
+},
+{
+"type": "Discount Coupon",
+"city": "brest",
+"text": "yOUr coupon is aBc123. Use iT iN OUR sHop.",
+"discount": "25,15",
+"exp_date": "2023-0601"
+},
+{
+"type": "news",
+"text": "sometHinG HapPenEd iN your City. It is amazing.\nLet's CElebrate it.",
+"city": "gomEl"
+},
+{
+"type": "news",
+"text": "Bla bla bla",
+"city": "Mogilev"	
+},
+{
+"type": "Private Ad",
+"text": "i WanT tO seLL a ski.\nMY Ski iS SUPER.",
+"exp_date": "2023-03-31"
+},
+{
+"type": "Discount coupon",
+"city": "vitebsk",
+"text": "yOUr coupon is aBc123. Use iT iN OUR sHop.",
+"discount": 25.85,
+"exp_date": "2023-06-01"
+}
+]

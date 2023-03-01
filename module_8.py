@@ -3,39 +3,23 @@ import module_4 as m4
 import module_5 as m5
 import func_lib as fl
 import os
+import json as j
 
 
-# class for creation feed from .txt file
-class TextFeed:
+# class for creation feed from .json file
+class JsonFeed:
     def __init__(self, input_path):
         self.input_path = input_path
 
     def __get_file_by_path(self, input_path):
         try:
             f = open(input_path, 'r')
-            f_str = f.read()
+            f_str = j.load(f)
             return f_str
         except FileNotFoundError:
             print(f'Incorrect file path: {input_path}')
 
-    def __get_feed_list(self, input_str):
-        """
-        method for getting feed lest from string
-        :param input_str: str
-        :return: list
-        """
-        try:
-            output_list = []
-            for part in input_str.split('***************'):
-                part = part.split('\n\n')
-                part = list(filter(None, part))
-                output_list.append(part)
-            # output_list.remove(output_list[-1])
-            return output_list
-        except AttributeError:
-            print(f'Input string {input_str} is incorrect. __get_feed_list method cannot be applied.')
-
-    def get_final_feed_from_txt(self, file_path_in, file_path_out):
+    def get_final_feed_from_json(self, file_path_in, file_path_out):
         """
         method gets file from file_path_in or from default if file_path_in is empty, parses it,
         calculates values of publish date and day left for different feed types
@@ -43,25 +27,25 @@ class TextFeed:
         :param file_path_in: str, file_path_out str
         :return:
         """
-        # tf = TextFeed(file_path_in)
-        feed_str = self.__get_file_by_path(self.input_path)
-        if feed_str is not None:
-            feed_list = self.__get_feed_list(feed_str)
+        # if file_path_in == '':
+        #     file_path_in = sys.argv[0]
+        # jf = JsonFeed(file_path_in)
+        feed_list = self.__get_file_by_path(self.input_path)
+        if feed_list is not None:
             for element in feed_list:
-                if element[0].lower() == 'news':
+                if element["type"].lower() == 'news':
                     publication_type_in = '1'
-                    publication_text_in = element[1]
-                    publication_city_in = element[2]
+                    publication_text_in = element["text"]
+                    publication_city_in = element["city"]
                     news = m5.News(publication_type_in, publication_text_in, publication_city_in)
                     feed = news.format_publication(news.type, news.text, news.city, news.publish_date())
                     feed = m4.normalize_case(feed)
                     if feed != 'empty':
                         news.write_feed(feed, file_path_out)
-
-                elif element[0].lower() == 'private ad':
+                elif element["type"].lower() == 'private ad':
                     publication_type_in = '2'
-                    publication_text_in = element[1]
-                    publication_exp_date_in = element[2]
+                    publication_text_in = element["text"]
+                    publication_exp_date_in = element["exp_date"]
                     if not fl.validate_date_format(publication_exp_date_in):
                         print(f"Incorrect expiration date '{publication_exp_date_in}'!"
                               f" Please,check expiration date in input file.")
@@ -70,16 +54,14 @@ class TextFeed:
                         feed = ad.format_publication(ad.type, ad.text, fl.format_date(ad.exp_date),
                                                      ad.day_left(ad.exp_date))
                         feed = m4.normalize_case(feed)
-
                         if feed != 'empty':
                             ad.write_feed(feed, file_path_out)
-
-                elif element[0].lower() == 'discount coupon':
+                elif element["type"].lower() == 'discount coupon':
                     publication_type_in = '3'
-                    publication_city_in = element[1]
-                    publication_text_in = element[2]
-                    publication_discount_in = element[3]
-                    publication_exp_date_in = element[4]
+                    publication_city_in = element["city"]
+                    publication_text_in = element["text"]
+                    publication_discount_in = element["discount"]
+                    publication_exp_date_in = element["exp_date"]
                     if not fl.validate_date_format(publication_exp_date_in):
                         print(f"Incorrect expiration date '{publication_exp_date_in}'!"
                               f" Please,check expiration date in input file.")
@@ -95,8 +77,6 @@ class TextFeed:
                         if feed != 'empty':
                             dc.write_feed(feed, file_path_out)
                 else:
-                    print(f"Incorrect feed type '{element[0].lower()}'")
+                    print(f'Incorrect feed type {element["type"]}')
             if file_path_in not in fl.DEFAULT_FILES:
                 os.remove(file_path_in)
-
-

@@ -1,7 +1,8 @@
 # module is used as function library for extra functions used in the application
 from datetime import datetime
-import os
+import sys
 
+DEFAULT_FILES = ['input_file.txt', 'input_file.json']
 
 def format_date(date):
     try:
@@ -28,8 +29,9 @@ def validate_number(discount):
         return False
 
 
-def get_file_extension(file_path):
-    file_extension = os.path.splitext(file_path)[1]
-    return file_extension
-
+def add_default_files():
+    parsed_arg = sys.argv.copy()
+    for f in DEFAULT_FILES:
+        parsed_arg.append(f)
+    return parsed_arg
 

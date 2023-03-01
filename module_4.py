@@ -145,41 +145,41 @@ def count_whitespaces(input_text):
     return count_whitespaces
 
 
-# module 2 implementation
-dict_list = create_dict_list(10)
-print(f'Source list of dictionaries is:')
-print(dict_list)
-
-final_dict = get_combined_dict(dict_list)
-print(f'Final dictionary is:')
-print(final_dict)
-
-print('\n\n')
-
-# module 3 implementation
-source_text = '''homEwork:
-
-  tHis iz your homeWork, copy these Text to variable.
-
-
-
-  You NEED TO normalize it fROM letter CASEs point oF View. also, create one MORE senTENCE witH LAST WoRDS of each existING SENtence and add it to the END OF this Paragraph.
-
-
-
-  it iZ misspeLLing here. fix“iZ” with correct “is”, but ONLY when it Iz a mistAKE.
-
-
-
-  last iz TO calculate nuMber OF Whitespace characteRS in this Tex. caREFULL, not only Spaces, but ALL whitespaces. I got 87.'''
-
-last_word_sentence = get_sentence_of_last_words(source_text)
-print(f'Sentence with last words of each existing sentence is:\n{last_word_sentence}\n\n')
-
-
-source_text_normalized = normalize_case(source_text)
-source_text_normalized = insert_sentence(source_text_normalized, 2)
-source_text_normalized = source_text_normalized.replace(' iz ', ' is ')
-
-print(f'Normalized text with inserted sentence and fixed “iz” with correct “is” is:\n{source_text_normalized}')
-print(f'\nNumber of whitespace characters in normalized text is: {count_whitespaces(source_text_normalized)}')
+# # module 2 implementation
+# dict_list = create_dict_list(10)
+# print(f'Source list of dictionaries is:')
+# print(dict_list)
+#
+# final_dict = get_combined_dict(dict_list)
+# print(f'Final dictionary is:')
+# print(final_dict)
+#
+# print('\n\n')
+#
+# # module 3 implementation
+# source_text = '''homEwork:
+#
+#   tHis iz your homeWork, copy these Text to variable.
+#
+#
+#
+#   You NEED TO normalize it fROM letter CASEs point oF View. also, create one MORE senTENCE witH LAST WoRDS of each existING SENtence and add it to the END OF this Paragraph.
+#
+#
+#
+#   it iZ misspeLLing here. fix“iZ” with correct “is”, but ONLY when it Iz a mistAKE.
+#
+#
+#
+#   last iz TO calculate nuMber OF Whitespace characteRS in this Tex. caREFULL, not only Spaces, but ALL whitespaces. I got 87.'''
+#
+# last_word_sentence = get_sentence_of_last_words(source_text)
+# print(f'Sentence with last words of each existing sentence is:\n{last_word_sentence}\n\n')
+#
+#
+# source_text_normalized = normalize_case(source_text)
+# source_text_normalized = insert_sentence(source_text_normalized, 2)
+# source_text_normalized = source_text_normalized.replace(' iz ', ' is ')
+#
+# print(f'Normalized text with inserted sentence and fixed “iz” with correct “is” is:\n{source_text_normalized}')
+# print(f'\nNumber of whitespace characters in normalized text is: {count_whitespaces(source_text_normalized)}')

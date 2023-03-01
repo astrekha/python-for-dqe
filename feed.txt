@@ -1,0 +1,50 @@
+News -------------------------
+Something happened. It is so interesting.
+Good news.
+Grodno, 01/03/2023 15.59
+------------------------------
+
+News -------------------------
+Something happened in your city. It is amazing.
+Let's celebrate it.
+Gomel, 01/03/2023 15.59
+------------------------------
+
+News -------------------------
+Bla bla bla
+Mogilev, 01/03/2023 15.59
+------------------------------
+
+Private ad --------------------
+I want to sell a ski.
+My ski is super.
+Actual until: 31/03/2023, 30 days left
+------------------------------
+
+Discount coupon --------------
+Vitebsk, 01/03/2023 15.59
+Your coupon is abc123. Use it in our shop.
+Discount: 25.85%
+Actual until: 01/06/2023, 92 days left
+------------------------------
+
+News -------------------------
+Manual news
+Manual city, 01/03/2023 16.00
+------------------------------
+
+
+Private Ad --------------------
+Manual private ad
+Actual until: 03/05/2023, 63 days left
+------------------------------
+
+
+Discount Coupon --------------
+Manual city, 01/03/2023 16.00
+Manual discount coupon
+Discount: 22%
+Actual until: 31/03/2023, 30 days left
+------------------------------
+
+

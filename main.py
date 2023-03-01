@@ -1,5 +1,7 @@
 import module_5 as m5
 import module_6 as m6
+import module_7 as m7
+import module_8 as m8
 import func_lib as fl
 import sys
 
@@ -29,6 +31,8 @@ if __name__ == '__main__':
             feed = news.format_publication(news.type, news.text, news.city, news.publish_date())
             # writing feed to feed.txt file
             news.write_feed(feed, "feed.txt")
+            m7.write_word_statistics('feed.txt')
+            m7.write_letter_statistics('feed.txt')
         elif publication_type_in == '2':
             publication_exp_date_in = input("Add expiration date in YYYY-MM-DD format: ")
             # validation of input expiration date
@@ -42,6 +46,8 @@ if __name__ == '__main__':
             feed = ad.format_publication(ad.type, ad.text, fl.format_date(ad.exp_date), ad.day_left(ad.exp_date))
             # writing feed to feed.txt file
             ad.write_feed(feed, "feed.txt")
+            m7.write_word_statistics('feed.txt')
+            m7.write_letter_statistics('feed.txt')
         elif publication_type_in == '3':
             publication_city_in = input("Add city: ")
             publication_text_in = input("Add text here: ")
@@ -69,27 +75,45 @@ if __name__ == '__main__':
                                          fl.format_date(dc.exp_date), dc.day_left(dc.exp_date))
             # writing feed to feed.txt file
             dc.write_feed(feed, "feed.txt")
+            m7.write_word_statistics('feed.txt')
+            m7.write_letter_statistics('feed.txt')
         else:
             print(f'"{publication_type_in}" type of publication is incorrect!')
 
     # code block for input from file
     elif input_info_format == "2":
+        file_extension = input("Provide file extension you want to use: ")
         file_path = input("Provide path to file you want to use: ")
-        # taking default file in case of empty input path
-        if file_path == '':
-            file_path = sys.argv[1]
-        if fl.get_file_extension(file_path) == '.txt':
+        if file_extension == '.txt':
+            # taking default .txt file in case of empty input path
+            if file_path == '':
+                parsed_arg = fl.add_default_files()
+                file_path = parsed_arg[1]
             # creation of object of TextFeed class
             tf = m6.TextFeed(file_path)
             # calling a method for getting feed from txt file
             tf.get_final_feed_from_txt(file_path, 'feed.txt')
+            # writing statistics files for words and letters
+            m7.write_word_statistics('feed.txt')
+            m7.write_letter_statistics('feed.txt')
             # draft for next modules
-        elif fl.get_file_extension(file_path) == '.json':
-            print('This is .json file')
-        elif fl.get_file_extension(file_path) == '.xml':
+        elif file_extension == '.json':
+            # taking default .json file in case of empty input path
+            if file_path == '':
+                parsed_arg = fl.add_default_files()
+                file_path = parsed_arg[2]
+            # creation of object of JsonFeed class
+            jf = m8.JsonFeed(file_path)
+            # calling a method for getting feed from json file
+            jf.get_final_feed_from_json(file_path, 'feed.txt')
+            # writing statistics files for words and letters
+            m7.write_word_statistics('feed.txt')
+            m7.write_letter_statistics('feed.txt')
+        elif file_extension == '.xml':
             print('This is .xml file')
         else:
-            print(f'Incorrect file extension {fl.get_file_extension(file_path)}!')
+            print(f'Incorrect file extension {file_extension}!')
 
     else:
         print("Input source is incorrect")
+

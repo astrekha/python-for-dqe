@@ -9,7 +9,7 @@ class Publication:
         self.text = text
 
     def get_pub_name(self, name):
-        publication_types = {'1': "News", '2': "Privat Ad", '3': "Discount Coupon"}
+        publication_types = {'1': "News", '2': "Private Ad", '3': "Discount Coupon"}
         pub_name = publication_types[name]
         return pub_name
 
@@ -79,7 +79,7 @@ class DiscountCoupon(News, PrivateAd):
         publication_formatted = self.get_pub_name(arg1).title() + ' ' + '-'*14 + '\n' + \
                                 arg2 + ', ' + \
                                 arg3 + '\n' + \
-                                arg4 + '\nDiscount: ' + arg5 + \
+                                arg4 + '\nDiscount: ' + str(arg5) + \
                                 '%\nActual until: ' + arg6 + ', ' + \
                                 arg7 + ' days left\n' + '-'*30 + '\n\n\n'
         return publication_formatted
