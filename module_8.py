@@ -4,6 +4,7 @@ import module_5 as m5
 import func_lib as fl
 import os
 import json as j
+from json.decoder import JSONDecodeError
 
 
 # class for creation feed from .json file
@@ -18,6 +19,8 @@ class JsonFeed:
             return f_str
         except FileNotFoundError:
             print(f'Incorrect file path: {input_path}')
+        except JSONDecodeError:
+            print(f'Incorrect json structure or file is empty: {input_path}')
 
     def get_final_feed_from_json(self, file_path_in, file_path_out):
         """
@@ -31,7 +34,7 @@ class JsonFeed:
         #     file_path_in = sys.argv[0]
         # jf = JsonFeed(file_path_in)
         feed_list = self.__get_file_by_path(self.input_path)
-        if feed_list is not None:
+        if feed_list is not None and feed_list != '':
             for element in feed_list:
                 if element["type"].lower() == 'news':
                     publication_type_in = '1'
@@ -40,8 +43,10 @@ class JsonFeed:
                     news = m5.News(publication_type_in, publication_text_in, publication_city_in)
                     feed = news.format_publication(news.type, news.text, news.city, news.publish_date())
                     feed = m4.normalize_case(feed)
-                    if feed != 'empty':
+                    if feed is not None:
                         news.write_feed(feed, file_path_out)
+                        if file_path_in not in fl.DEFAULT_FILES:
+                            os.remove(file_path_in)
                 elif element["type"].lower() == 'private ad':
                     publication_type_in = '2'
                     publication_text_in = element["text"]
@@ -57,8 +62,10 @@ class JsonFeed:
                         feed = ad.format_publication(ad.type, ad.text, fl.format_date(ad.exp_date),
                                                      ad.day_left(ad.exp_date))
                         feed = m4.normalize_case(feed)
-                        if feed != 'empty':
+                        if feed is not None:
                             ad.write_feed(feed, file_path_out)
+                            if file_path_in not in fl.DEFAULT_FILES:
+                                os.remove(file_path_in)
                 elif element["type"].lower() == 'discount coupon':
                     publication_type_in = '3'
                     publication_city_in = element["city"]
@@ -83,9 +90,12 @@ class JsonFeed:
                         feed = dc.format_publication(dc.type, dc.city, dc.publish_date(), dc.text, dc.discount,
                                                      fl.format_date(dc.exp_date), dc.day_left(dc.exp_date))
                         feed = m4.normalize_case(feed)
-                        if feed != 'empty':
+                        if feed is not None:
                             dc.write_feed(feed, file_path_out)
+                            if file_path_in not in fl.DEFAULT_FILES:
+                                os.remove(file_path_in)
                 else:
                     print(f'Incorrect feed type {element["type"]}')
-            if file_path_in not in fl.DEFAULT_FILES:
-                os.remove(file_path_in)
+                    fl.log_error(f'Incorrect feed type \"{element["type"].lower()}\" in file {self.input_path}', 'logs')
+        else:
+            fl.log_error(f"File {self.input_path} is empty, has incorrect structure or does not exist.", 'logs')
