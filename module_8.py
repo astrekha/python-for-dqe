@@ -16,6 +16,7 @@ class JsonFeed:
         try:
             f = open(input_path, 'r')
             f_str = j.load(f)
+            f.close()
             return f_str
         except FileNotFoundError:
             print(f'Incorrect file path: {input_path}')
@@ -45,8 +46,8 @@ class JsonFeed:
                     feed = m4.normalize_case(feed)
                     if feed is not None:
                         news.write_feed(feed, file_path_out)
-                        if file_path_in not in fl.DEFAULT_FILES:
-                            os.remove(file_path_in)
+                        # if file_path_in not in fl.DEFAULT_FILES:
+                        #     os.remove(file_path_in)
                 elif element["type"].lower() == 'private ad':
                     publication_type_in = '2'
                     publication_text_in = element["text"]
@@ -64,8 +65,8 @@ class JsonFeed:
                         feed = m4.normalize_case(feed)
                         if feed is not None:
                             ad.write_feed(feed, file_path_out)
-                            if file_path_in not in fl.DEFAULT_FILES:
-                                os.remove(file_path_in)
+                            # if file_path_in not in fl.DEFAULT_FILES:
+                            #     os.remove(file_path_in)
                 elif element["type"].lower() == 'discount coupon':
                     publication_type_in = '3'
                     publication_city_in = element["city"]
@@ -92,10 +93,12 @@ class JsonFeed:
                         feed = m4.normalize_case(feed)
                         if feed is not None:
                             dc.write_feed(feed, file_path_out)
-                            if file_path_in not in fl.DEFAULT_FILES:
-                                os.remove(file_path_in)
+                            # if file_path_in not in fl.DEFAULT_FILES:
+                            #     os.remove(file_path_in)
                 else:
                     print(f'Incorrect feed type {element["type"]}')
                     fl.log_error(f'Incorrect feed type \"{element["type"].lower()}\" in file {self.input_path}', 'logs')
+            if file_path_in not in fl.DEFAULT_FILES:
+                os.remove(file_path_in)
         else:
             fl.log_error(f"File {self.input_path} is empty, has incorrect structure or does not exist.", 'logs')

@@ -14,6 +14,7 @@ class TextFeed:
         try:
             f = open(input_path, 'r')
             f_str = f.read()
+            f.close()
             return f_str
         except FileNotFoundError:
             print(f'Incorrect file path: {input_path}')
@@ -57,8 +58,8 @@ class TextFeed:
                     feed = m4.normalize_case(feed)
                     if feed is not None:
                         news.write_feed(feed, file_path_out)
-                        if file_path_in not in fl.DEFAULT_FILES:
-                            os.remove(file_path_in)
+                        # if file_path_in not in fl.DEFAULT_FILES:
+                        #     os.remove(file_path_in)
 
                 elif element[0].lower() == 'private ad':
                     publication_type_in = '2'
@@ -77,8 +78,8 @@ class TextFeed:
                         feed = m4.normalize_case(feed)
                         if feed is not None:
                             ad.write_feed(feed, file_path_out)
-                            if file_path_in not in fl.DEFAULT_FILES:
-                                os.remove(file_path_in)
+                            # if file_path_in not in fl.DEFAULT_FILES:
+                            #     os.remove(file_path_in)
 
                 elif element[0].lower() == 'discount coupon':
                     publication_type_in = '3'
@@ -106,11 +107,13 @@ class TextFeed:
                         feed = m4.normalize_case(feed)
                         if feed is not None:
                             dc.write_feed(feed, file_path_out)
-                            if file_path_in not in fl.DEFAULT_FILES:
-                                os.remove(file_path_in)
+                            # if file_path_in not in fl.DEFAULT_FILES:
+                            #     os.remove(file_path_in)
                 else:
                     print(f"Incorrect feed type '{element[0]}'")
                     fl.log_error(f"Incorrect feed type '{element[0].lower()}' in file {self.input_path}", 'logs')
+            if file_path_in not in fl.DEFAULT_FILES:
+                os.remove(file_path_in)
         else:
             fl.log_error(f"File {self.input_path} is empty or does not exist.", 'logs')
 
