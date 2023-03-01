@@ -63,8 +63,11 @@ class TextFeed:
                     publication_text_in = element[1]
                     publication_exp_date_in = element[2]
                     if not fl.validate_date_format(publication_exp_date_in):
-                        print(f"Incorrect expiration date '{publication_exp_date_in}'!"
-                              f" Please,check expiration date in input file.")
+                        fl.log_error(f"Incorrect expiration date '{publication_exp_date_in}'!"
+                                     f" Please,check expiration date in input file {self.input_path}.",
+                                     'logs')
+                        # print(f"Incorrect expiration date '{publication_exp_date_in}'!"
+                        #       f" Please,check expiration date in input file {self.input_path}.")
                     else:
                         ad = m5.PrivateAd(publication_type_in, publication_text_in, publication_exp_date_in)
                         feed = ad.format_publication(ad.type, ad.text, fl.format_date(ad.exp_date),
@@ -81,11 +84,17 @@ class TextFeed:
                     publication_discount_in = element[3]
                     publication_exp_date_in = element[4]
                     if not fl.validate_date_format(publication_exp_date_in):
-                        print(f"Incorrect expiration date '{publication_exp_date_in}'!"
-                              f" Please,check expiration date in input file.")
+                        # print(f"Incorrect expiration date '{publication_exp_date_in}'!"
+                        #       f" Please,check expiration date in input file.")
+                        fl.log_error(f"Incorrect expiration date '{publication_exp_date_in}'!"
+                                     f" Please,check expiration date in input file {self.input_path}.",
+                                     'logs')
                     if not fl.validate_number(publication_discount_in):
-                        print(f"Incorrect discount size '{publication_discount_in}'!"
-                              f" Please,check discount size in input file.")
+                        fl.log_error(f"Incorrect discount size '{publication_discount_in}'! "
+                                     f" Please,check discount size in input file {self.input_path}.",
+                                     'logs')
+                        # print(f"Incorrect discount size '{publication_discount_in}'!"
+                        #       f" Please,check discount size in input file.")
                     if fl.validate_date_format(publication_exp_date_in) and fl.validate_number(publication_discount_in):
                         dc = m5.DiscountCoupon(publication_type_in, publication_text_in, publication_exp_date_in,
                                                publication_discount_in, publication_city_in)

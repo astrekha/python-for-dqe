@@ -1,6 +1,7 @@
 # module is used as function library for extra functions used in the application
 from datetime import datetime
 import sys
+import os
 
 DEFAULT_FILES = ['input_file.txt', 'input_file.json']
 
@@ -35,3 +36,10 @@ def add_default_files():
         parsed_arg.append(f)
     return parsed_arg
 
+
+def log_error(in_error_msg, out_file_path):
+    out_file_name = datetime.now().strftime("%Y_%m_%d" + '_error_log.txt')
+    full_file_path = os.path.join(out_file_path, out_file_name)
+    log_file = open(full_file_path, "a")
+    log_file.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f") + ' Error: ' + in_error_msg + '\n')
+    log_file.close()
