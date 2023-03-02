@@ -67,9 +67,9 @@ class TextFeed:
                     publication_exp_date_in = element[2]
                     if not fl.validate_date_format(publication_exp_date_in):
                         is_file_valid = False
-                        fl.log_error(f"Incorrect expiration date '{publication_exp_date_in}'!"
-                                     f" Please,check expiration date in input file {self.input_path}.",
-                                     'logs')
+                        fl.write_log_message(f"Incorrect expiration date '{publication_exp_date_in}'!"
+                                             f" Please,check expiration date in input file {self.input_path}.",
+                                             'logs')
                         # print(f"Incorrect expiration date '{publication_exp_date_in}'!"
                         #       f" Please,check expiration date in input file {self.input_path}.")
                     else:
@@ -90,14 +90,14 @@ class TextFeed:
                         # print(f"Incorrect expiration date '{publication_exp_date_in}'!"
                         #       f" Please,check expiration date in input file.")
                         is_file_valid = False
-                        fl.log_error(f"Incorrect expiration date '{publication_exp_date_in}'!"
-                                     f" Please,check expiration date in input file {self.input_path}.",
-                                     'logs')
+                        fl.write_log_message(f"Incorrect expiration date '{publication_exp_date_in}'!"
+                                             f" Please,check expiration date in input file {self.input_path}.",
+                                             'logs')
                     if not fl.validate_number(publication_discount_in):
                         is_file_valid = False
-                        fl.log_error(f"Incorrect discount size '{publication_discount_in}'! "
-                                     f" Please,check discount size in input file {self.input_path}.",
-                                     'logs')
+                        fl.write_log_message(f"Incorrect discount size '{publication_discount_in}'! "
+                                             f" Please,check discount size in input file {self.input_path}.",
+                                             'logs')
                         # print(f"Incorrect discount size '{publication_discount_in}'!"
                         #       f" Please,check discount size in input file.")
                     if fl.validate_date_format(publication_exp_date_in) and fl.validate_number(publication_discount_in):
@@ -111,11 +111,11 @@ class TextFeed:
 
                 else:
                     print(f"Incorrect feed type '{element[0]}'")
-                    fl.log_error(f"Incorrect feed type '{element[0]}' in file {self.input_path}", 'logs')
+                    fl.write_log_message(f"Incorrect feed type '{element[0]}' in file {self.input_path}", 'logs')
             if is_file_valid and file_path_in not in fl.DEFAULT_FILES:
-                fl.log_error(f"f File {file_path_in} successfully processed and will be removed", 'logs')
+                fl.write_log_message(f"f File {file_path_in} successfully processed and will be removed", 'logs')
                 os.remove(file_path_in)
         else:
-            fl.log_error(f"File {self.input_path} is empty or does not exist.", 'logs')
+            fl.write_log_message(f"File {self.input_path} is empty or does not exist.", 'logs')
 
 
