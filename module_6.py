@@ -14,10 +14,11 @@ class TextFeed:
         try:
             f = open(input_path, 'r')
             f_str = f.read()
-            f.close()
             return f_str
         except FileNotFoundError:
             print(f'Incorrect file path: {input_path}')
+        finally:
+            f.close()
 
     def __get_feed_list(self, input_str):
         """
@@ -47,6 +48,7 @@ class TextFeed:
         # tf = TextFeed(file_path_in)
         feed_str = self.__get_file_by_path(self.input_path)
         if feed_str is not None and feed_str != '':
+            is_file_valid = True
             feed_list = self.__get_feed_list(feed_str)
             for element in feed_list:
                 if element[0].lower() == 'news':
@@ -58,14 +60,13 @@ class TextFeed:
                     feed = m4.normalize_case(feed)
                     if feed is not None:
                         news.write_feed(feed, file_path_out)
-                        # if file_path_in not in fl.DEFAULT_FILES:
-                        #     os.remove(file_path_in)
 
                 elif element[0].lower() == 'private ad':
                     publication_type_in = '2'
                     publication_text_in = element[1]
                     publication_exp_date_in = element[2]
                     if not fl.validate_date_format(publication_exp_date_in):
+                        is_file_valid = False
                         fl.log_error(f"Incorrect expiration date '{publication_exp_date_in}'!"
                                      f" Please,check expiration date in input file {self.input_path}.",
                                      'logs')
@@ -78,8 +79,6 @@ class TextFeed:
                         feed = m4.normalize_case(feed)
                         if feed is not None:
                             ad.write_feed(feed, file_path_out)
-                            # if file_path_in not in fl.DEFAULT_FILES:
-                            #     os.remove(file_path_in)
 
                 elif element[0].lower() == 'discount coupon':
                     publication_type_in = '3'
@@ -90,10 +89,12 @@ class TextFeed:
                     if not fl.validate_date_format(publication_exp_date_in):
                         # print(f"Incorrect expiration date '{publication_exp_date_in}'!"
                         #       f" Please,check expiration date in input file.")
+                        is_file_valid = False
                         fl.log_error(f"Incorrect expiration date '{publication_exp_date_in}'!"
                                      f" Please,check expiration date in input file {self.input_path}.",
                                      'logs')
                     if not fl.validate_number(publication_discount_in):
+                        is_file_valid = False
                         fl.log_error(f"Incorrect discount size '{publication_discount_in}'! "
                                      f" Please,check discount size in input file {self.input_path}.",
                                      'logs')
@@ -107,12 +108,12 @@ class TextFeed:
                         feed = m4.normalize_case(feed)
                         if feed is not None:
                             dc.write_feed(feed, file_path_out)
-                            # if file_path_in not in fl.DEFAULT_FILES:
-                            #     os.remove(file_path_in)
+
                 else:
                     print(f"Incorrect feed type '{element[0]}'")
-                    fl.log_error(f"Incorrect feed type '{element[0].lower()}' in file {self.input_path}", 'logs')
-            if file_path_in not in fl.DEFAULT_FILES:
+                    fl.log_error(f"Incorrect feed type '{element[0]}' in file {self.input_path}", 'logs')
+            if is_file_valid and file_path_in not in fl.DEFAULT_FILES:
+                fl.log_error(f"f File {file_path_in} successfully processed and will be removed", 'logs')
                 os.remove(file_path_in)
         else:
             fl.log_error(f"File {self.input_path} is empty or does not exist.", 'logs')

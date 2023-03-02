@@ -22,6 +22,8 @@ class JsonFeed:
             print(f'Incorrect file path: {input_path}')
         except JSONDecodeError:
             print(f'Incorrect json structure or file is empty: {input_path}')
+        finally:
+            f.close()
 
     def get_final_feed_from_json(self, file_path_in, file_path_out):
         """
@@ -36,6 +38,7 @@ class JsonFeed:
         # jf = JsonFeed(file_path_in)
         feed_list = self.__get_file_by_path(self.input_path)
         if feed_list is not None and feed_list != '':
+            is_file_valid = True
             for element in feed_list:
                 if element["type"].lower() == 'news':
                     publication_type_in = '1'
@@ -55,6 +58,7 @@ class JsonFeed:
                     if not fl.validate_date_format(publication_exp_date_in):
                         # print(f"Incorrect expiration date '{publication_exp_date_in}'!"
                         #       f" Please,check expiration date in input file.")
+                        is_file_valid = False
                         fl.log_error(f"Incorrect expiration date '{publication_exp_date_in}'!"
                                      f" Please,check expiration date in input file {self.input_path}.",
                                      'logs')
@@ -76,12 +80,14 @@ class JsonFeed:
                     if not fl.validate_date_format(publication_exp_date_in):
                         # print(f"Incorrect expiration date '{publication_exp_date_in}'!"
                         #       f" Please,check expiration date in input file.")
+                        is_file_valid = False
                         fl.log_error(f"Incorrect expiration date '{publication_exp_date_in}'!"
                                      f" Please,check expiration date in input file {self.input_path}.",
                                      'logs')
                     if not fl.validate_number(publication_discount_in):
                         # print(f"Incorrect discount size '{publication_discount_in}'!"
                         #       f" Please,check discount size in input file.")
+                        is_file_valid = False
                         fl.log_error(f"Incorrect discount size '{publication_discount_in}'! "
                                      f" Please,check discount size in input file {self.input_path}.",
                                      'logs')
@@ -97,8 +103,9 @@ class JsonFeed:
                             #     os.remove(file_path_in)
                 else:
                     print(f'Incorrect feed type {element["type"]}')
-                    fl.log_error(f'Incorrect feed type \"{element["type"].lower()}\" in file {self.input_path}', 'logs')
-            if file_path_in not in fl.DEFAULT_FILES:
+                    fl.log_error(f'Incorrect feed type \"{element["type"]}\" in file {self.input_path}', 'logs')
+            if is_file_valid and file_path_in not in fl.DEFAULT_FILES:
+                fl.log_error(f"f File {file_path_in} successfully processed and will be removed", 'logs')
                 os.remove(file_path_in)
         else:
             fl.log_error(f"File {self.input_path} is empty, has incorrect structure or does not exist.", 'logs')
