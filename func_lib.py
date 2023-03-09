@@ -3,7 +3,8 @@ from datetime import datetime
 import sys
 import os
 
-DEFAULT_FILES = ['input_file.txt', 'input_file.json']
+DEFAULT_FILES = ['input_file.txt', 'input_file.json', 'input_file.xml']
+
 
 def format_date(date):
     try:

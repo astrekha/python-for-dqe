@@ -45,7 +45,8 @@ class JsonFeed:
                     publication_text_in = element["text"]
                     publication_city_in = element["city"]
                     news = m5.News(publication_type_in, publication_text_in, publication_city_in)
-                    feed = news.format_publication(news.type, news.text, news.city, news.publish_date())
+                    feed = news.format_publication(type=news.type, text=news.text, city=news.city,
+                                                   pub_date=news.publish_date())
                     feed = m4.normalize_case(feed)
                     if feed is not None:
                         news.write_feed(feed, file_path_out)
@@ -64,8 +65,8 @@ class JsonFeed:
                                              'logs')
                     else:
                         ad = m5.PrivateAd(publication_type_in, publication_text_in, publication_exp_date_in)
-                        feed = ad.format_publication(ad.type, ad.text, fl.format_date(ad.exp_date),
-                                                     ad.day_left(ad.exp_date))
+                        feed = ad.format_publication(type=ad.type, text=ad.text, exp_date=fl.format_date(ad.exp_date),
+                                                     day_left=ad.day_left(ad.exp_date))
                         feed = m4.normalize_case(feed)
                         if feed is not None:
                             ad.write_feed(feed, file_path_out)
@@ -94,8 +95,10 @@ class JsonFeed:
                     if fl.validate_date_format(publication_exp_date_in) and fl.validate_number(publication_discount_in):
                         dc = m5.DiscountCoupon(publication_type_in, publication_text_in, publication_exp_date_in,
                                                publication_discount_in, publication_city_in)
-                        feed = dc.format_publication(dc.type, dc.city, dc.publish_date(), dc.text, dc.discount,
-                                                     fl.format_date(dc.exp_date), dc.day_left(dc.exp_date))
+                        feed = dc.format_publication(type=dc.type, city=dc.city, pub_date=dc.publish_date(),
+                                                     text=dc.text, discount=dc.discount,
+                                                     exp_date=fl.format_date(dc.exp_date),
+                                                     day_left=dc.day_left(dc.exp_date))
                         feed = m4.normalize_case(feed)
                         if feed is not None:
                             dc.write_feed(feed, file_path_out)

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<data>
+    <feed type="news">
+        <text>sometHinG HapPenEd. It is so interesting.
+		Good news.</text>
+        <city>GrodnO</city>
+    </feed>
+    <feed type="Private Ad">
+		<text>i WanT tO seLL a CAR. it Is gReeN.
+		It iS supeR FAsT.</text>
+        <exp_date>2023-05/28</exp_date>
+    </feed>
+    <feed type="Discount Coupon">
+        <city>brest</city>
+        <text>yOUr coupon is aBc123. Use iT iN OUR sHop.</text>
+        <discount>25,15</discount>
+        <exp_date>2023-0601</exp_date>
+    </feed>
+	<feed type="news">
+        <text>sometHinG HapPenEd iN your City. It is amazing.
+		Let's CElebrate it.</text>
+        <city>gomEl</city>
+    </feed>
+	<feed type="news">
+        <text>Bla bla bla</text>
+        <city>Mogilev</city>
+    </feed>
+	<feed type="Private Ad">
+		<text>i WanT tO seLL a ski.
+		MY Ski iS SUPER.</text>
+        <exp_date>2023-03-31</exp_date>
+    </feed>
+	<feed type="Discount Coupon">
+        <city>vitebsk</city>
+        <text>yOUr coupon is aBc123. Use iT iN OUR sHop.</text>
+        <discount>25.85</discount>
+        <exp_date>2023-06-01</exp_date>
+    </feed>
+</data>
