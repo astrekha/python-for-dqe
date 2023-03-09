@@ -12,13 +12,20 @@ class TextFeed:
 
     def __get_file_by_path(self, input_path):
         try:
-            f = open(input_path, 'r')
-            f_str = f.read()
-            return f_str
+            with open(input_path, 'r') as f:
+                f_str = f.read()
+                return f_str
         except FileNotFoundError:
             print(f'Incorrect file path: {input_path}')
-        finally:
-            f.close()
+
+        # try:
+        #     f = open(input_path, 'r')
+        #     f_str = f.read()
+        #     return f_str
+        # except FileNotFoundError:
+        #     print(f'Incorrect file path: {input_path}')
+        # finally:
+        #     f.close()
 
     def __get_feed_list(self, input_str):
         """

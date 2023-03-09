@@ -14,16 +14,14 @@ class JsonFeed:
 
     def __get_file_by_path(self, input_path):
         try:
-            f = open(input_path, 'r')
-            f_str = j.load(f)
-            f.close()
-            return f_str
+            with open(input_path, 'r') as f:
+                f_str = j.load(f)
+                f.close()
+                return f_str
         except FileNotFoundError:
             print(f'Incorrect file path: {input_path}')
         except JSONDecodeError:
             print(f'Incorrect json structure or file is empty: {input_path}')
-        finally:
-            f.close()
 
     def get_final_feed_from_json(self, file_path_in, file_path_out):
         """
