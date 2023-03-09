@@ -40,7 +40,10 @@ def add_default_files():
 
 def write_log_message(in_error_msg, out_file_path):
     out_file_name = datetime.now().strftime("%Y_%m_%d" + '_error_log.txt')
+    isExist = os.path.exists(out_file_path)
+    if not isExist:
+        os.makedirs(out_file_path)
     full_file_path = os.path.join(out_file_path, out_file_name)
-    log_file = open(full_file_path, "a")
-    log_file.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f") + ' Message: ' + in_error_msg + '\n')
-    log_file.close()
+    with open(full_file_path, "a+") as log_file:
+        log_file.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f") + ' Message: ' + in_error_msg + '\n')
+        log_file.close()
