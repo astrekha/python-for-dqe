@@ -1,23 +1,24 @@
 import module_4 as m4
 import module_5 as m5
+import module_10 as m10
 import func_lib as fl
 import os
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as et
 
 
-# class for creation feed from .json file
+# class for creation feed from .xml file
 class XmlFeed:
     def __init__(self, input_path):
         self.input_path = input_path
 
     def __get_file_by_path(self, input_path):
         try:
-            tree = ET.parse(input_path)
+            tree = et.parse(input_path)
             root = tree.getroot()
             return root
         except FileNotFoundError:
             print(f'Incorrect file path: {input_path}')
-        except ET.ParseError:
+        except et.ParseError:
             print(f'Incorrect json structure in: {input_path}')
 
 
@@ -43,7 +44,22 @@ class XmlFeed:
                                                    pub_date=news.publish_date())
                     feed = m4.normalize_case(feed)
                     if feed is not None:
-                        news.write_feed(feed, file_path_out)
+                        db_conn = m10.DBConnection('test.db')
+                        db_conn.create_table('news',
+                                             'news_text text, '
+                                             'news_city text, '
+                                             'news_pub_date text')
+                        string_to_insert = db_conn.format_str_before_execute(text=m4.normalize_case(news.text),
+                                                                             city=m4.normalize_case(news.city),
+                                                                             date=news.publish_date())
+                        # print(db_conn.is_duplicate("news", text=news.text, city=news.city))
+
+                        if not db_conn.is_duplicate("news", text=news.text, city=news.city):
+                            db_conn.insert_into_table('news', string_to_insert)
+                            news.write_feed(feed, file_path_out)
+                        else:
+                            fl.write_log_message(f"Duplicated data:'{string_to_insert}'!"
+                                                 f" Data will not be inserted.", 'logs')
                 elif element.attrib["type"].lower() == 'private ad':
                     publication_type_in = '2'
                     publication_text_in = element.find("text").text
@@ -59,9 +75,22 @@ class XmlFeed:
                                                      day_left=ad.day_left(ad.exp_date))
                         feed = m4.normalize_case(feed)
                         if feed is not None:
-                            ad.write_feed(feed, file_path_out)
-                            # if file_path_in not in fl.DEFAULT_FILES:
-                            #     os.remove(file_path_in)
+                            db_conn = m10.DBConnection('test.db')
+                            db_conn.create_table('private_ad',
+                                                 'ad_text text, '
+                                                 'ad_exp_date text, '
+                                                 'ad_day_left integer')
+                            string_to_insert = db_conn.format_str_before_execute(text=m4.normalize_case(ad.text),
+                                                                                 exp_date=fl.format_date(
+                                                                                     ad.exp_date),
+                                                                                 day_left=ad.day_left(ad.exp_date))
+                            if not db_conn.is_duplicate("private_ad", text=ad.text,
+                                                        exp_date=fl.format_date(ad.exp_date)):
+                                db_conn.insert_into_table('private_ad', string_to_insert)
+                                ad.write_feed(feed, file_path_out)
+                            else:
+                                fl.write_log_message(f"Duplicated data:'{string_to_insert}'!"
+                                                     f" Data will not be inserted.", 'logs')
                 elif element.attrib["type"].lower() == 'discount coupon':
                     publication_type_in = '3'
                     publication_city_in = element.find("city").text
@@ -87,12 +116,35 @@ class XmlFeed:
                                                      day_left=dc.day_left(dc.exp_date))
                         feed = m4.normalize_case(feed)
                         if feed is not None:
-                            dc.write_feed(feed, file_path_out)
+                            db_conn = m10.DBConnection('test.db')
+                            db_conn.create_table('discount_coupon',
+                                                 'dc_text text, '
+                                                 'dc_city text, '
+                                                 'dc_pub_date text, '
+                                                 'dc_exp_date text, '
+                                                 'dc_discount real, '
+                                                 'dc_day_left integer')
+                            string_to_insert = db_conn.format_str_before_execute(text=m4.normalize_case(dc.text),
+                                                                                 city=m4.normalize_case(dc.city),
+                                                                                 pub_date=dc.publish_date(),
+                                                                                 exp_date=fl.format_date(
+                                                                                     dc.exp_date),
+                                                                                 discount=dc.discount,
+                                                                                 day_left=dc.day_left(dc.exp_date)
+                                                                                 )
+                            if not db_conn.is_duplicate("discount_coupon",
+                                                        text=dc.text, city=dc.city,
+                                                        exp_date=fl.format_date(dc.exp_date), discount=dc.discount):
+                                db_conn.insert_into_table('discount_coupon', string_to_insert)
+                                dc.write_feed(feed, file_path_out)
+                            else:
+                                fl.write_log_message(f"Duplicated data:'{string_to_insert}'!"
+                                                     f" Data will not be inserted.", 'logs')
                 else:
                     print(f'Incorrect feed type {element.attrib["type"]}')
                     fl.write_log_message(f'Incorrect feed type \"{element.attrib["type"]}\" in file {self.input_path}', 'logs')
             if is_file_valid and file_path_in not in fl.DEFAULT_FILES:
-                fl.write_log_message(f"f File {file_path_in} successfully processed and will be removed", 'logs')
+                fl.write_log_message(f"File {file_path_in} successfully processed and will be removed", 'logs')
                 os.remove(file_path_in)
         else:
             fl.write_log_message(f"File {self.input_path} is empty, has incorrect structure or does not exist.", 'logs')

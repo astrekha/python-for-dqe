@@ -3,6 +3,7 @@ import module_4 as m4
 import module_5 as m5
 import func_lib as fl
 import os
+import module_10 as m10
 
 
 # class for creation feed from .txt file
@@ -52,7 +53,6 @@ class TextFeed:
         :param file_path_in: str, file_path_out str
         :return:
         """
-        # tf = TextFeed(file_path_in)
         feed_str = self.__get_file_by_path(self.input_path)
         if feed_str is not None and feed_str != '':
             is_file_valid = True
@@ -66,7 +66,20 @@ class TextFeed:
                     feed = news.format_publication(type=news.type, text=news.text, city=news.city, pub_date=news.publish_date())
                     feed = m4.normalize_case(feed)
                     if feed is not None:
-                        news.write_feed(feed, file_path_out)
+                        db_conn = m10.DBConnection('test.db')
+                        db_conn.create_table('news',
+                                             'news_text text, '
+                                             'news_city text, '
+                                             'news_pub_date text')
+                        string_to_insert = db_conn.format_str_before_execute(text=m4.normalize_case(news.text),
+                                                                             city=m4.normalize_case(news.city),
+                                                                             date=news.publish_date())
+                        if not db_conn.is_duplicate("news", text=news.text, city=news.city):
+                            db_conn.insert_into_table('news', string_to_insert)
+                            news.write_feed(feed, file_path_out)
+                        else:
+                            fl.write_log_message(f"Duplicated data:'{string_to_insert}'!"
+                                                 f" Data will not be inserted.", 'logs')
 
                 elif element[0].lower() == 'private ad':
                     publication_type_in = '2'
@@ -77,15 +90,26 @@ class TextFeed:
                         fl.write_log_message(f"Incorrect expiration date '{publication_exp_date_in}'!"
                                              f" Please,check expiration date in input file {self.input_path}.",
                                              'logs')
-                        # print(f"Incorrect expiration date '{publication_exp_date_in}'!"
-                        #       f" Please,check expiration date in input file {self.input_path}.")
                     else:
                         ad = m5.PrivateAd(publication_type_in, publication_text_in, publication_exp_date_in)
                         feed = ad.format_publication(type=ad.type, text=ad.text, exp_date=fl.format_date(ad.exp_date),
                                                      day_left=ad.day_left(ad.exp_date))
                         feed = m4.normalize_case(feed)
                         if feed is not None:
-                            ad.write_feed(feed, file_path_out)
+                            db_conn = m10.DBConnection('test.db')
+                            db_conn.create_table('private_ad',
+                                                 'ad_text text, '
+                                                 'ad_exp_date text, '
+                                                 'ad_day_left integer')
+                            string_to_insert = db_conn.format_str_before_execute(text=m4.normalize_case(ad.text),
+                                                                                 exp_date=fl.format_date(ad.exp_date),
+                                                                                 day_left=ad.day_left(ad.exp_date))
+                            if not db_conn.is_duplicate("private_ad", text=ad.text, exp_date=fl.format_date(ad.exp_date)):
+                                db_conn.insert_into_table('private_ad', string_to_insert)
+                                ad.write_feed(feed, file_path_out)
+                            else:
+                                fl.write_log_message(f"Duplicated data:'{string_to_insert}'!"
+                                                     f" Data will not be inserted.", 'logs')
 
                 elif element[0].lower() == 'discount coupon':
                     publication_type_in = '3'
@@ -94,8 +118,6 @@ class TextFeed:
                     publication_discount_in = element[3]
                     publication_exp_date_in = element[4]
                     if not fl.validate_date_format(publication_exp_date_in):
-                        # print(f"Incorrect expiration date '{publication_exp_date_in}'!"
-                        #       f" Please,check expiration date in input file.")
                         is_file_valid = False
                         fl.write_log_message(f"Incorrect expiration date '{publication_exp_date_in}'!"
                                              f" Please,check expiration date in input file {self.input_path}.",
@@ -105,8 +127,6 @@ class TextFeed:
                         fl.write_log_message(f"Incorrect discount size '{publication_discount_in}'! "
                                              f" Please,check discount size in input file {self.input_path}.",
                                              'logs')
-                        # print(f"Incorrect discount size '{publication_discount_in}'!"
-                        #       f" Please,check discount size in input file.")
                     if fl.validate_date_format(publication_exp_date_in) and fl.validate_number(publication_discount_in):
                         dc = m5.DiscountCoupon(publication_type_in, publication_text_in, publication_exp_date_in,
                                                publication_discount_in, publication_city_in)
@@ -116,8 +136,26 @@ class TextFeed:
                                                      day_left=dc.day_left(dc.exp_date))
                         feed = m4.normalize_case(feed)
                         if feed is not None:
-                            dc.write_feed(feed, file_path_out)
-
+                            db_conn = m10.DBConnection('test.db')
+                            db_conn.create_table('discount_coupon',
+                                                 'dc_text text, '
+                                                 'dc_city text, '
+                                                 'dc_pub_date text, '
+                                                 'dc_exp_date text, '
+                                                 'dc_discount real, '
+                                                 'dc_day_left integer')
+                            string_to_insert = db_conn.format_str_before_execute(text=m4.normalize_case(dc.text),
+                                                                                 city=m4.normalize_case(dc.city),
+                                                                                 pub_date=dc.publish_date(),
+                                                                                 exp_date=fl.format_date(dc.exp_date),
+                                                                                 discount=dc.discount,
+                                                                                 day_left=dc.day_left(dc.exp_date)
+                                                                                 )
+                            if not db_conn.is_duplicate("discount_coupon",
+                                                        text=dc.text, city=dc.city,
+                                                        exp_date=fl.format_date(dc.exp_date), discount=dc.discount):
+                                db_conn.insert_into_table('discount_coupon', string_to_insert)
+                                dc.write_feed(feed, file_path_out)
                 else:
                     print(f"Incorrect feed type '{element[0]}'")
                     fl.write_log_message(f"Incorrect feed type '{element[0]}' in file {self.input_path}", 'logs')
